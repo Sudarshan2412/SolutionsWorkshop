@@ -1,0 +1,19 @@
+# Secrets
+.env
+
+# Python env and caches
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local app/cache artifacts
+.gradio/
+
+# Editor/OS
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Internal planning notes (not needed for participants)
+plan.md
+tasks/
