@@ -6,10 +6,12 @@ A hands-on introductory workshop that teaches LangChain by building a RAG chatbo
 
 ## Setup
 
+For full setup (including prerequisites and VS Code extensions), see `SETUP_STEPS.md`.
+
 **1. Clone the repo**
 ```bash
-git clone <repo-url>
-cd langchain-workshop
+git clone https://github.com/Sudarshan2412/SolutionsWorkshop.git
+cd SolutionsWorkshop
 ```
 
 **2. Create and activate a virtual environment**
@@ -27,7 +29,7 @@ pip install -r requirements.txt
 **4. Add your Groq API key**
 - Get a key from [console.groq.com/keys](https://console.groq.com/keys)
 - Copy `.env.example` to `.env`
-- Paste your key in
+- Paste your key in `.env`
 
 ```bash
 cp .env.example .env
