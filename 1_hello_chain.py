@@ -36,10 +36,10 @@ prompt = PromptTemplate.from_template(
 # Connect the prompt and the llm into a chain using the | operator
 # The chain should: take a topic → format the prompt → send to LLM
 #
-# Hint: chain = prompt | llm
+chain = prompt | llm
 # ============================================================
 
-chain = None  # replace this line
+# chain= None
 
 # ============================================================
 

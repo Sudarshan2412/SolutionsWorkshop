@@ -33,12 +33,12 @@ def load_and_split(pdf_path: str):
     # (one Document per page).
     #
     # Hint:
-    #   loader = PyPDFLoader(pdf_path)
-    #   docs = loader.load()
+    loader = PyPDFLoader(pdf_path)
+    docs = loader.load()
     # ============================================================
 
-    loader = None  # replace this line
-    docs = None    # replace this line
+    # loader = None  
+    # docs = None    
 
     # ============================================================
     # YOUR CODE HERE — Part 2: Split into chunks
@@ -50,15 +50,16 @@ def load_and_split(pdf_path: str):
     #                     (overlap helps the LLM answer questions
     #                      that span a chunk boundary)
     #
-    # Hint:
-    #   splitter = RecursiveCharacterTextSplitter(
-    #       chunk_size=500, chunk_overlap=50
-    #   )
-    #   chunks = splitter.split_documents(docs)
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=500,
+        chunk_overlap=50,
+    )
+    chunks = splitter.split_documents(docs)
+
     # ============================================================
 
-    splitter = None  # replace this line
-    chunks = None    # replace this line
+    # splitter = None  
+    # chunks = None  
 
     # ============================================================
 

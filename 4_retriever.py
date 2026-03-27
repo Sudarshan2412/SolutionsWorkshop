@@ -71,12 +71,12 @@ def build_retriever(pdf_path: str):
     #    search_kwargs={"k": 3} means: return the 3 most relevant chunks.
     #
     # Hint:
-    #   vectorstore = Chroma.from_documents(chunks, embedding=embeddings)
-    #   retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+    vectorstore = Chroma.from_documents(chunks, embedding=embeddings)
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
     # ============================================================
 
-    vectorstore = None  # replace this line
-    retriever = None    # replace this line
+    # vectorstore = None  
+    # retriever = None   
 
     # ============================================================
 

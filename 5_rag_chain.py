@@ -29,7 +29,7 @@ from langchain_classic.chains import RetrievalQA
 build_retriever = importlib.import_module("4_retriever").build_retriever
 load_dotenv()
 
-PDF_PATH = "handbook.pdf"
+PDF_PATH = "cats_and_dogs_notebook.pdf"
 
 # --- LLM setup (provided) ---
 llm = ChatGroq(
@@ -60,14 +60,14 @@ def get_rag_chain(pdf_path: str):
     #                                  (useful for debugging and trust)
     #
     # Hint:
-    #   qa_chain = RetrievalQA.from_chain_type(
-    #       llm=llm,
-    #       retriever=retriever,
-    #       return_source_documents=True,
-    #   )
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        retriever=retriever,
+        return_source_documents=True,
+    )
     # ============================================================
 
-    qa_chain = None  # replace this line
+    # qa_chain = None 
 
     # ============================================================
 
