@@ -8,7 +8,7 @@ from langchain_core.embeddings import Embeddings
 from sentence_transformers import SentenceTransformer
 from langchain_community.vectorstores import Chroma
 
-load_and_split = importlib.import_module("3_loader").load_and_split
+load_and_split = importlib.import_module("3_loader_solution").load_and_split
 
 load_dotenv()
 

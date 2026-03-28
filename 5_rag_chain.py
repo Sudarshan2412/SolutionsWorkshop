@@ -23,13 +23,14 @@ After completing this file you will understand:
 
 from dotenv import load_dotenv
 import importlib
+from collections.abc import Sequence
 from langchain_groq import ChatGroq  
 from langchain_classic.chains import RetrievalQA 
 
 build_retriever = importlib.import_module("4_retriever").build_retriever
 load_dotenv()
 
-PDF_PATH = "cats_and_dogs_notebook.pdf"
+PDF_PATH = "handbook.pdf"
 
 # --- LLM setup (provided) ---
 llm = ChatGroq(
@@ -38,13 +39,13 @@ llm = ChatGroq(
     max_tokens=512,
 )
 
-def get_rag_chain(pdf_path: str):
+def get_rag_chain(pdf_path: str | Sequence[str]):
     """
     Build and return the full RAG chain.
     This function is imported by app.py to power the chat UI.
     """
 
-    print("Building retriever from PDF...")
+    print("Building retriever from PDF source(s)...")
     retriever = build_retriever(pdf_path)
     print("Retriever ready.\n")
 
@@ -60,14 +61,10 @@ def get_rag_chain(pdf_path: str):
     #                                  (useful for debugging and trust)
     #
     # Hint:
-    qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,
-        retriever=retriever,
-        return_source_documents=True,
-    )
+    # qa_chain = RetrievalQA.from_chain_type()
     # ============================================================
 
-    # qa_chain = None 
+    qa_chain = None 
 
     # ============================================================
 

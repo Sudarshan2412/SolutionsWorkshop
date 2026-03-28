@@ -15,5 +15,8 @@ __pycache__/
 Thumbs.db
 
 # Internal planning notes (not needed for participants)
-plan.md
-tasks/
+/plan.md
+/tasks/
+
+# Local copy of snippet handout (keep solutions/ copy tracked)
+/SOLUTION_SNIPPETS.md

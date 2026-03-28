@@ -20,6 +20,8 @@ After completing this file you will understand:
 
 from dotenv import load_dotenv
 import importlib
+from collections.abc import Sequence
+import os
 from langchain_core.embeddings import Embeddings
 from sentence_transformers import SentenceTransformer
 from langchain_community.vectorstores import Chroma
@@ -49,16 +51,35 @@ class LocalMiniLMEmbeddings(Embeddings):
 embeddings = LocalMiniLMEmbeddings()
 
 
-def build_retriever(pdf_path: str):
+def _normalise_pdf_paths(pdf_path: str | Sequence[str]) -> list[str]:
+    if isinstance(pdf_path, str):
+        return [pdf_path]
+    return [path for path in pdf_path if isinstance(path, str) and path.strip()]
+
+
+def build_retriever(pdf_path: str | Sequence[str]):
     """
     Load, split, embed, and store document chunks.
     Returns a retriever that can fetch the top-k relevant chunks
     for any query.
     """
 
-    print("Loading and splitting PDF...")
-    chunks = load_and_split(pdf_path)
-    print(f"{len(chunks)} chunks ready for embedding.\n")
+    pdf_paths = _normalise_pdf_paths(pdf_path)
+    if not pdf_paths:
+        raise ValueError("No PDF paths provided to build_retriever.")
+
+    all_chunks = []
+    for path in pdf_paths:
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"PDF not found: {path}")
+
+        print(f"Loading and splitting PDF: {path}")
+        chunks = load_and_split(path)
+        all_chunks.extend(chunks)
+
+    print(
+        f"{len(all_chunks)} chunks ready for embedding from {len(pdf_paths)} PDF(s).\n"
+    )
 
     # ============================================================
     # YOUR CODE HERE
@@ -71,12 +92,11 @@ def build_retriever(pdf_path: str):
     #    search_kwargs={"k": 3} means: return the 3 most relevant chunks.
     #
     # Hint:
-    vectorstore = Chroma.from_documents(chunks, embedding=embeddings)
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
+    # vectorstore = Chroma.from_documents(?, embedding=?)
     # ============================================================
 
-    # vectorstore = None  
-    # retriever = None   
+    vectorstore = None  
+    retriever = None   
 
     # ============================================================
 

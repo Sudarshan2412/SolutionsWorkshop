@@ -44,6 +44,10 @@ Then open `http://localhost:7860`.
 This page shows:
 - Workshop guide (run order and flow)
 - Live output: without memory vs with memory comparison
+- Optional RAG smoke-check output (when checkbox is enabled)
+
+Use the checkbox "Run optional handbook RAG smoke check" if you want the page
+to also run a quick retrieval-grounded answer check.
 
 ## Execution Order (Participant Mode)
 
@@ -121,6 +125,11 @@ Then open `http://localhost:7860`.
 
 `app.py` uses `5_rag_chain.py` from the main folder, not the `solutions/` folder.
 
+In the app you can:
+- ask handbook and pet-guide questions as text
+- upload an image directly in chat for optional classification
+- still provide an image file path manually if you prefer
+
 Tip: `demo_comparison.py` and `app.py` both use localhost. Stop one before starting the other if port 7860 is already in use.
 
 ## Common Mistakes
@@ -129,6 +138,7 @@ Tip: `demo_comparison.py` and `app.py` both use localhost. Stop one before start
 - Running all files in parallel and mixing outputs.
 - Editing only solution files and expecting `app.py` to use them.
 - Forgetting to add `GROQ_API_KEY` in `.env`.
+- Expecting optional image classification to work without `cat_dog_classifier.keras`.
 
 ## Fast Recovery Checklist
 

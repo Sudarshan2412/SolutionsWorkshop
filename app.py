@@ -1,11 +1,11 @@
 """
-app.py — Cat/Dog RAG Chat Dashboard (PIVOTED)
-==============================================
-Enhanced version with image classification routing.
+app.py — Multi-Source RAG Assistant
+===================================
+Enhanced version with optional image classification routing.
 
 This app now:
 1. Routes image paths (.jpg, .png, .jpeg) to cat/dog classification (optional)
-2. Processes text queries through standard RAG
+2. Processes text queries through standard RAG across indexed documents
 3. Maintains conversation memory across interactions
 
 Run this file after completing all setup:
@@ -21,7 +21,7 @@ import gradio as gr
 import importlib
 from dotenv import load_dotenv
 import os
-from pathlib import Path
+from typing import Any
 from PIL import Image
 import numpy as np
 
@@ -45,7 +45,7 @@ load_dotenv()
 # ============================================================
 # CONFIGURATION
 # ============================================================
-PDF_PATH = "cats_and_dogs_notebook.pdf"
+PDF_PATHS = ["cats_and_dogs_notebook.pdf", "handbook.pdf"]
 MODEL_PATH = "cat_dog_classifier.keras"
 ALLOWED_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png"}
 
@@ -210,20 +210,73 @@ def is_image_path(user_input: str) -> bool:
     return any(input_lower.endswith(ext) for ext in ALLOWED_IMAGE_EXTENSIONS)
 
 
-def route_user_input(message: str) -> tuple[dict, str]:
+def _extract_uploaded_file_path(uploaded_file: Any) -> str | None:
+    """
+    Extract file path from possible Gradio upload payload shapes.
+    """
+    if isinstance(uploaded_file, str):
+        return uploaded_file
+
+    if isinstance(uploaded_file, dict):
+        path = uploaded_file.get("path")
+        if isinstance(path, str):
+            return path
+
+    file_name = getattr(uploaded_file, "name", None)
+    if isinstance(file_name, str):
+        return file_name
+
+    return None
+
+
+def normalise_chat_message(message: str | dict[str, Any]) -> tuple[str | None, bool]:
+    """
+    Normalise message from plain text or multimodal Gradio payload.
+
+    Returns:
+        Tuple of (normalised_input, force_image_routing)
+    """
+    if isinstance(message, dict):
+        files = message.get("files") or []
+        for uploaded_file in files:
+            file_path = _extract_uploaded_file_path(uploaded_file)
+            if file_path:
+                return file_path, True
+
+        text = str(message.get("text", "")).strip()
+        return (text or None), False
+
+    if isinstance(message, str):
+        text = message.strip()
+        return (text or None), False
+
+    text = str(message).strip()
+    return (text or None), False
+
+
+def route_user_input(message: str, force_image: bool = False) -> tuple[dict, str]:
     """
     Route user input to either image classifier or RAG chain.
     
     Returns:
         Tuple of (response_dict, input_type) where input_type is 'image' or 'text'
     """
-    is_img_path = is_image_path(message)
+    is_img_path = force_image or is_image_path(message)
     classifier_ready = classifier_model is not None
     
     print(f"[DEBUG] Routing: is_image_path={is_img_path}, classifier_model={classifier_ready}")
     
-    if is_img_path and classifier_ready:
+    if is_img_path:
         image_path = message.strip()
+
+        if not classifier_ready:
+            return {
+                "response": (
+                    "Image classification is currently unavailable because the "
+                    "classifier model is not loaded."
+                )
+            }, "image_unavailable"
+
         classification_result = predict_image(image_path)
         
         # Store classification in conversation history
@@ -267,7 +320,7 @@ def route_user_input(message: str) -> tuple[dict, str]:
 # ============================================================
 
 print("=" * 70)
-print("INITIALIZING CAT/DOG RAG CHAT DASHBOARD")
+print("INITIALIZING MULTI-SOURCE RAG ASSISTANT")
 print("=" * 70 + "\n")
 
 # Try to load classifier (optional)
@@ -280,9 +333,12 @@ else:
     print("    (RAG functionality will work normally)\n")
 
 print("Initialising RAG chain - this may take a minute on first run...")
-print("(The embedding model is being downloaded and the PDF is being indexed)\n")
+print(
+    "(The embedding model is being downloaded and the PDFs are being indexed)"
+)
+print(f"Indexing sources: {', '.join(PDF_PATHS)}\n")
 
-chain = get_rag_chain(PDF_PATH)
+chain = get_rag_chain(PDF_PATHS)
 rag_chain = chain
 
 if chain is None:
@@ -290,7 +346,7 @@ if chain is None:
     print("Complete the YOUR CODE HERE section in 5_rag_chain.py first, then re-run app.py.\n")
 
 
-def chat(message: str, history: list) -> str:
+def chat(message: str | dict[str, Any], history: list) -> str:
     """
     Called by Gradio on every user message.
     Routes to either image classifier or RAG chain based on input type.
@@ -299,11 +355,21 @@ def chat(message: str, history: list) -> str:
         return "[ERROR] RAG chain not set. Please complete 5_rag_chain.py"
     
     try:
-        result, input_type = route_user_input(message)
+        normalised_message, force_image = normalise_chat_message(message)
+
+        if not normalised_message:
+            return "Please enter a text question or upload an image (.jpg/.jpeg/.png)."
+
+        result, input_type = route_user_input(
+            normalised_message,
+            force_image=force_image,
+        )
         
         if input_type == "image":
             # Format response with classification details
             response_text = f"[IMAGE CLASSIFICATION]\n{result['classification']}\n\nInformation:\n{result['response']}"
+        elif input_type == "image_unavailable":
+            response_text = result["response"]
         else:
             # Standard text response
             response_text = result['response']
@@ -322,19 +388,26 @@ classifier_status = "[AVAILABLE]" if classifier_model else "[UNAVAILABLE - RAG s
 
 demo = gr.ChatInterface(
     fn=chat,
-    title="Cat/Dog RAG Assistant",
+    multimodal=True,
+    title="Knowledge Base RAG Assistant",
     description=(
-        "Ask questions about cats and dogs. Image paths can be provided for classification if available.\n\n"
+        "Ask questions across your indexed knowledge sources (handbook + pet guide in this workshop). "
+        "Image paths can be provided for optional classification.\n\n"
         f"Image Classification: {classifier_status}\n\n"
         "How to use:\n"
-        "- Text: 'What should I feed my cat?'\n"
-        "- Image: '/path/to/image.jpg' (classifier must be loaded)"
+        "- Handbook: 'What is the minimum attendance required to sit for exams?'\n"
+        "- General text: 'What should I feed my cat?'\n"
+        "- Image upload: attach an image in chat and send\n"
+        "- Image path: '/path/to/image.jpg' (classifier must be loaded)"
     ),
     examples=[
+        "What is the minimum attendance required to sit for exams?",
+        "What is the policy on late assignment submissions?",
+        "How is the final grade calculated in the handbook?",
+        "What is the process to apply for leave?",
         "What are common health issues for cats?",
         "How should I train my dog?",
         "What's the best diet for dogs?",
-        "Tell me about cat behavior.",
     ],
 )
 

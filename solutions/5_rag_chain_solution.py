@@ -7,7 +7,7 @@ import importlib
 from langchain_groq import ChatGroq
 from langchain_classic.chains import RetrievalQA
 
-build_retriever = importlib.import_module("4_retriever").build_retriever
+build_retriever = importlib.import_module("4_retriever_solution").build_retriever
 
 load_dotenv()
 

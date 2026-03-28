@@ -39,9 +39,8 @@ llm = ChatGroq(
 # objects (HumanMessage, AIMessage) rather than a plain string —
 # which works better with chat-style LLMs.
 # ============================================================
-memory = ConversationBufferMemory(return_messages=True)
 
-# memory = None
+memory = None
 
 # ============================================================
 
