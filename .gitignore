@@ -20,3 +20,6 @@ Thumbs.db
 
 # Local copy of snippet handout (keep solutions/ copy tracked)
 /SOLUTION_SNIPPETS.md
+
+# Workshop solution references (exclude from future pushes)
+/solutions/
