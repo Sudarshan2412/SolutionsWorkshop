@@ -91,6 +91,11 @@ python demo_comparison.py
 
 Open the localhost URL shown in terminal (usually http://localhost:7860).
 
+The page now includes:
+1. Workshop guide output
+2. Live no-memory vs memory comparison
+3. Optional handbook RAG smoke-check output (enable via checkbox)
+
 ## 7. Workshop Run Order
 
 Use this order during the session:
@@ -108,6 +113,12 @@ Then run:
 ```bash
 python app.py
 ```
+
+In `app.py`, text RAG works by default. Optional image classification requires:
+1. `cat_dog_classifier.keras` in project root
+2. TensorFlow available in the active environment
+
+You can provide images by upload in chat or by file path text.
 
 ## 8. If You Get Stuck
 

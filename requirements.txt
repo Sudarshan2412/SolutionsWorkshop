@@ -8,3 +8,5 @@ pypdf
 langchain-text-splitters
 gradio
 python-dotenv
+tensorflow
+pillow

@@ -40,7 +40,7 @@ llm = ChatGroq(
 # which works better with chat-style LLMs.
 # ============================================================
 
-memory = None  # replace this line
+memory = None
 
 # ============================================================
 
