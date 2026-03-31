@@ -120,7 +120,4 @@ In `app.py`, text RAG works by default. Optional image classification requires:
 
 You can provide images by upload in chat or by file path text.
 
-## 8. If You Get Stuck
 
-- Use snippet-only quick answers: solutions/SOLUTION_SNIPPETS.md
-- Use full solution files under the solutions folder
