@@ -28,13 +28,3 @@ Thumbs.db
 /solutions/
 
 # Session files to push later
-/1_hello_chain.py
-/2_memory.py
-/3_loader.py
-/4_retriever.py
-/5_rag_chain.py
-/app.py
-/demo_comparison.py
-/PARTICIPANT_EXECUTION_FLOW.md
-/google_solutions.ipynb
-/cat.jpg
