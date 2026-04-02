@@ -64,7 +64,11 @@ def get_rag_chain(pdf_path: str | Sequence[str]):
     # qa_chain = RetrievalQA.from_chain_type()
     # ============================================================
 
-    qa_chain = None 
+    qa_chain = RetrievalQA.from_chain_type(
+        llm=llm,
+        retriever=retriever,
+        return_source_documents=True,
+    ) 
 
     # ============================================================
 

@@ -18,13 +18,4 @@ Thumbs.db
 /plan.md
 /tasks/
 
-# Local copy of snippet handout (keep solutions/ copy tracked)
-/SOLUTION_SNIPPETS.md
 
-# Local setup guide draft (not needed in remote repo)
-/SETUP_STEPS.md
-
-# Workshop solution references (exclude from future pushes)
-/solutions/
-
-# Session files to push later

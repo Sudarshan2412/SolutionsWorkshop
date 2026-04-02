@@ -36,8 +36,8 @@ def load_and_split(pdf_path: str):
     # loader = PyPDFLoader(?)
     # ============================================================
 
-    loader = None  
-    docs = None    
+    loader = PyPDFLoader(pdf_path)  
+    docs = loader.load()  
 
     # ============================================================
     # YOUR CODE HERE — Part 2: Split into chunks
@@ -55,8 +55,11 @@ def load_and_split(pdf_path: str):
     # )
     # ============================================================
 
-    splitter = None  
-    chunks = None  
+    splitter = RecursiveCharacterTextSplitter(
+        chunk_size=500,
+        chunk_overlap=50,
+    ) 
+    chunks = splitter.split_documents(docs) 
 
     # ============================================================
 
