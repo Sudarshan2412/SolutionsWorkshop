@@ -13,8 +13,6 @@ After completing this file you will understand:
   - What chunk_size and chunk_overlap mean and why they matter
 """
 
-from unittest import loader
-
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
@@ -38,8 +36,8 @@ def load_and_split(pdf_path: str):
     # loader = PyPDFLoader(?)
     # ============================================================
 
-    loader = PyPDFLoader(pdf_path)
-    docs = loader.load()  
+    loader = None  
+    docs = None    
 
     # ============================================================
     # YOUR CODE HERE — Part 2: Split into chunks
@@ -57,11 +55,8 @@ def load_and_split(pdf_path: str):
     # )
     # ============================================================
 
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=500,
-        chunk_overlap=50,
-    )
-    chunks = splitter.split_documents(docs) 
+    splitter = None  
+    chunks = None  
 
     # ============================================================
 
