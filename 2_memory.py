@@ -40,7 +40,7 @@ llm = ChatGroq(
 # which works better with chat-style LLMs.
 # ============================================================
 
-memory = None
+memory = ConversationBufferMemory(return_messages=True)
 
 # ============================================================
 
